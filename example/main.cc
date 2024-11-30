@@ -14,12 +14,18 @@ int main() {
 
 	miniatura::http::HttpServer server(std::move(acceptor), std::move(sock));
 
+	server.addMethodHandler("GET",
+		std::regex("/"),
+		[](const miniatura::http::RequestTarget &requestTarget,
+			miniatura::http::Response &responseOut) {
+			responseOut.statusCode = miniatura::http::HttpStatus::Ok;
+			responseOut.headers["Content-Type"] = "text/html";
+			responseOut.body = "OK";
+		},
+		{});
+
 	server.beginAccept();
 	context.run();
-
-	while (true) {
-
-	}
 
 	return 0;
 }

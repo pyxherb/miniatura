@@ -96,6 +96,8 @@ namespace miniatura {
 			std::optional<HttpParseError> parseHeaders(std::string_view s);
 			std::optional<HttpParseError> parse(char c);
 		};
+
+		const char *getHttpStatusText(HttpStatus status);
 	}
 }
 

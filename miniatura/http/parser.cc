@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <cassert>
 
 using namespace miniatura;
 using namespace miniatura::http;
@@ -77,7 +78,6 @@ targetWhitespaceParseEnd:
 				requestLineOut.version += c;
 		}
 	}
-	return HttpParseError{ "Prematured end of message", 0, i - 1 };
 versionParseEnd:
 
 	return {};
@@ -327,4 +327,43 @@ std::optional<HttpParseError> HttpRequestParser::parse(char c) {
 	}
 
 	return {};
+}
+
+const char *miniatura::http::getHttpStatusText(HttpStatus status) {
+	switch (status) {
+		case HttpStatus::Ok:
+			return "OK";
+		case HttpStatus::Created:
+			return "Created";
+		case HttpStatus::Accepted:
+			return "Accepted";
+		case HttpStatus::NoContent:
+			return "No Content";
+		case HttpStatus::MultipleChoices:
+			return "Multiple Choices";
+		case HttpStatus::MovedPermanently:
+			return "Moved Permanently";
+		case HttpStatus::MovedTemporarily:
+			return "Moved Temporarily";
+		case HttpStatus::NotModified:
+			return "Not Modified";
+		case HttpStatus::BadRequest:
+			return "Bad Request";
+		case HttpStatus::Unauthorized:
+			return "Unauthorized";
+		case HttpStatus::Forbidden:
+			return "Forbidden";
+		case HttpStatus::NotFound:
+			return "Not Found";
+		case HttpStatus::InternalServerError:
+			return "Internal Server Error";
+		case HttpStatus::NotImplemented:
+			return "Not Implemented";
+		case HttpStatus::BadGateway:
+			return "Bad Gateway";
+		case HttpStatus::ServiceUnavailable:
+			return "Service Unavailable";
+		default:
+			return "Invalid HTTP status";
+	}
 }

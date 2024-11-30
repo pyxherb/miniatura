@@ -63,19 +63,25 @@ MINIATURA_API void HttpSession::read() {
 
 						requestTargetOut.version = requestLine.version;
 						requestTargetOut.methodName = requestLine.method;
-						requestTargetOut.targetName = requestLine.target;
+
+						size_t queryIndex = requestLine.target.find_first_of('?');
+						size_t fragmentIndex = requestLine.target.find_first_of('#');
+
+						requestTargetOut.path = requestLine.target.substr(0, queryIndex);
+						requestTargetOut.parameters = requestLine.target.substr(queryIndex + 1, fragmentIndex - queryIndex);
+						requestTargetOut.fragment = requestLine.target.substr(fragmentIndex + 1);
 
 						if (auto it = httpServer->methodRegistries.find(requestLine.method); it != httpServer->methodRegistries.end()) {
 							MethodRegistry &registry = it->second;
 
 							for (auto &i : registry.handlers) {
 								if (i.attributes.noCaptureGroup) {
-									if (std::regex_search(requestLine.target, i.regexp)) {
+									if (std::regex_search(requestTargetOut.path, i.regexp)) {
 										i.handler(requestTargetOut, responseOut);
 										goto succeeded;
 									}
 								} else {
-									if (std::regex_match(requestLine.target, requestTargetOut.matchResults, i.regexp)) {
+									if (std::regex_match(requestTargetOut.path, requestTargetOut.matchResults, i.regexp)) {
 										i.handler(requestTargetOut, responseOut);
 										goto succeeded;
 									}

@@ -31,7 +31,9 @@ namespace miniatura {
 		struct RequestTarget {
 			std::string_view version;
 			std::string_view methodName;
-			std::string_view targetName;
+			std::string path;
+			std::string parameters;
+			std::string fragment;
 			std::smatch matchResults;
 		};
 

@@ -87,7 +87,7 @@ MINIATURA_API void HttpSession::read() {
 					}
 
 				succeeded:
-					self->writeBuffer = "HTTP " + std::move(responseOut.version) + " ";
+					self->writeBuffer = "HTTP/" + std::move(responseOut.version) + " ";
 					self->writeBuffer += std::to_string((uint16_t)responseOut.statusCode) + " ";
 					if (responseOut.statusText.empty())
 						responseOut.statusText = getHttpStatusText(responseOut.statusCode);
